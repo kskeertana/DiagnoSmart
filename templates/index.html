@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiagnoSmart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url("{{ url_for('static', filename='bg.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <!-- Logo at the top-left corner -->
+            <div class="logo">
+                <img class="myimg" src="{{ url_for('static', filename='WhatsApp Image 2024-07-04 at 11.43.21_2dd2cf81.jpg') }}" alt="Health Center Logo">
+            </div>
+
+            <a class="navbar-brand" href="#">DiagnoSmart</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Predict Disease</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:8501/">Major</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    
+    <h1 class="mt-4 my-4 text-center text-green">Disease Prediction</h1>
+    <div class="container my-4 mt-4 custom-container">
+        <form action="/predict" method="post">
+            <div class="form-group">
+                <label for="symptoms">Select Symptoms:</label>
+                <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="Type symptoms such as itching, sleeping, aching etc">
+            </div>
+            <br>
+            <button type="button" id="startSpeechRecognition" class="btn btn-primary" style="margin-left:3px;border:1px solid white; border-radius:20px;">
+                Start Speech Recognition
+            </button>
+            <br>
+
+           
+            <div name="mysysms" id="transcription"></div>
+
+            {% if message %}
+            <p>{{ message }}</p>
+            {% endif %}
+            <br>
+
+            <button type="submit" class="btn btn-danger btn-lg" style="width: 100%; padding: 14px; margin-bottom: 5px;">Predict</button>
+        </form>
+    </div>
+
+    {% if predicted_disease %}
+    
+    <h1 class="text-center my-4 mt-4">Our AI System Results</h1>
+    <div class="container">
+        <div class="result-container">
+           
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#diseaseModal">Disease</button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#descriptionModal">Description</button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#precautionModal">Precaution</button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#medicationsModal">Medications</button>
+        <!--   <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#workoutsModal">Workouts</button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#dietsModal">Diets</button>  --> 
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#homeremedyModal">Home Remedy</button>
+            <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#appointmentsModal">Find Hospitals</button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="diseaseModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="diseaseModalLabel">Predicted Disease</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ predicted_disease }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="descriptionModalLabel">Description</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ dis_des }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="precautionModal" tabindex="-1" aria-labelledby="precautionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="precautionModalLabel">Precaution</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in my_precautions %}
+                        <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="modal fade" id="medicationsModal" tabindex="-1" aria-labelledby="medicationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="medicationsModalLabel">Medications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in medications %}
+                        <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workouts Modal 
+    <div class="modal fade" id="workoutsModal" tabindex="-1" aria-labelledby="workoutsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="workoutsModalLabel">Workouts</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in workout %}
+                        <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="dietsModal" tabindex="-1" aria-labelledby="dietsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="dietsModalLabel">Diets</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in my_diet %}
+                        <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>  -->
+
+    <div class="modal fade" id="homeremedyModal" tabindex="-1" aria-labelledby="homeremedyModalLabel" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="homeremedyModalLabel">Home remedies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for i in my_remedy %}
+                            <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="modal fade" id="appointmentsModal" tabindex="-1" aria-labelledby="appointmentsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #020606; color:white;">
+                    <h5 class="modal-title" id="appointmentsModalLabel">Hospitals for {{ predicted_disease }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <a href="https://www.google.com/maps/search/{{ predicted_disease }}+hospitals+near+me" target="_blank">Find {{ predicted_disease }} Hospitals Near Me</a> 
+
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        document.getElementById('startSpeechRecognition').addEventListener('click', function () {
+            const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            recognition.continuous = true; // Keep recognition active until explicitly stopped
+
+            let timeoutId;
+
+            recognition.onstart = function () {
+                console.log('Speech recognition started');
+                clearTimeout(timeoutId); // Clear any existing timeout
+            };
+
+            recognition.onresult = function (event) {
+                const transcriptionDiv = document.getElementById('transcription');
+                const symptomsInput = document.getElementById('symptoms');
+                const transcript = event.results[0][0].transcript;
+
+                // Define the mapping for symptoms
+                const symptomMapping = {
+    "itching": "itching",
+    "skin rash": "skin_rash",
+    "nodal skin eruptions": "nodal_skin_eruptions",
+    "continuous sneezing": "continuous_sneezing",
+    "shivering": "shivering",
+    "chills": "chills",
+    "joint pain": "joint_pain",
+    "stomach pain": "stomach_pain",
+    "acidity": "acidity",
+    "ulcers on tongue": "ulcers_on_tongue",
+    "muscle wasting": "muscle_wasting",
+    "vomiting": "vomiting",
+    "burning micturition": "burning_micturition",
+    "spotting urination": "spotting_urination",
+    "fatigue": "fatigue",
+    "weight gain": "weight_gain",
+    "anxiety": "anxiety",
+    "cold hands and feets": "cold_hands_and_feets",
+    "mood swings": "mood_swings",
+    "weight loss": "weight_loss",
+    "restlessness": "restlessness",
+    "lethargy": "lethargy",
+    "patches in throat": "patches_in_throat",
+    "irregular sugar level": "irregular_sugar_level",
+    "cough": "cough",
+    "high fever": "high_fever",
+    "sunken eyes": "sunken_eyes",
+    "breathlessness": "breathlessness",
+    "sweating": "sweating",
+    "dehydration": "dehydration",
+    "indigestion": "indigestion",
+    "headache": "headache",
+    "yellowish skin": "yellowish_skin",
+    "dark urine": "dark_urine",
+    "nausea": "nausea",
+    "loss of appetite": "loss_of_appetite",
+    "pain behind the eyes": "pain_behind_the_eyes",
+    "back pain": "back_pain",
+    "constipation": "constipation",
+    "abdominal pain": "abdominal_pain",
+    "diarrhoea": "diarrhoea",
+    "mild fever": "mild_fever",
+    "yellow urine": "yellow_urine",
+    "yellowing of eyes": "yellowing_of_eyes",
+    "acute liver failure": "acute_liver_failure",
+    "fluid overload": "fluid_overload",
+    "swelling of stomach": "swelling_of_stomach",
+    "swelled lymph nodes": "swelled_lymph_nodes",
+    "malaise": "malaise",
+    "blurred and distorted vision": "blurred_and_distorted_vision",
+    "phlegm": "phlegm",
+    "throat irritation": "throat_irritation",
+    "redness of eyes": "redness_of_eyes",
+    "sinus pressure": "sinus_pressure",
+    "runny nose": "runny_nose",
+    "congestion": "congestion",
+    "chest pain": "chest_pain",
+    "weakness in limbs": "weakness_in_limbs",
+    "fast heart rate": "fast_heart_rate",
+    "pain during bowel movements": "pain_during_bowel_movements",
+    "pain in anal region": "pain_in_anal_region",
+    "bloody stool": "bloody_stool",
+    "irritation in anus": "irritation_in_anus",
+    "neck pain": "neck_pain",
+    "dizziness": "dizziness",
+    "cramps": "cramps",
+    "bruising": "bruising",
+    "obesity": "obesity",
+    "swollen legs": "swollen_legs",
+    "swollen blood vessels": "swollen_blood_vessels",
+    "puffy face and eyes": "puffy_face_and_eyes",
+    "enlarged thyroid": "enlarged_thyroid",
+    "brittle nails": "brittle_nails",
+    "swollen extremeties": "swollen_extremeties",
+    "excessive hunger": "excessive_hunger",
+    "extra marital contacts": "extra_marital_contacts",
+    "drying and tingling lips": "drying_and_tingling_lips",
+    "slurred speech": "slurred_speech",
+    "knee pain": "knee_pain",
+    "hip joint pain": "hip_joint_pain",
+    "muscle weakness": "muscle_weakness",
+    "stiff neck": "stiff_neck",
+    "swelling joints": "swelling_joints",
+    "movement stiffness": "movement_stiffness",
+    "spinning movements": "spinning_movements",
+    "loss of balance": "loss_of_balance",
+    "unsteadiness": "unsteadiness",
+    "weakness of one body side": "weakness_of_one_body_side",
+    "loss of smell": "loss_of_smell",
+    "bladder discomfort": "bladder_discomfort",
+    "foul smell of urine": "foul_smell_of_urine",
+    "continuous feel of urine": "continuous_feel_of_urine",
+    "passage of gases": "passage_of_gases",
+    "internal itching": "internal_itching",
+    "toxic look (typhos)": "toxic_look_(typhos)",
+    "depression": "depression",
+    "irritability": "irritability",
+    "muscle pain": "muscle_pain",
+    "altered sensorium": "altered_sensorium",
+    "red spots over body": "red_spots_over_body",
+    "belly pain": "belly_pain",
+    "abnormal menstruation": "abnormal_menstruation",
+    "dischromic patches": "dischromic_patches",
+    "watering from eyes": "watering_from_eyes",
+    "increased appetite": "increased_appetite",
+    "polyuria": "polyuria",
+    "family history": "family_history",
+    "mucoid sputum": "mucoid_sputum",
+    "rusty sputum": "rusty_sputum",
+    "lack of concentration": "lack_of_concentration",
+    "visual disturbances": "visual_disturbances",
+    "receiving blood transfusion": "receiving_blood_transfusion",
+    "receiving unsterile injections": "receiving_unsterile_injections",
+    "coma": "coma",
+    "stomach bleeding": "stomach_bleeding",
+    "distention of abdomen": "distention_of_abdomen",
+    "history of alcohol consumption": "history_of_alcohol_consumption",
+    "fluid overload": "fluid_overload",
+    "blood in sputum": "blood_in_sputum",
+    "prominent veins on calf": "prominent_veins_on_calf",
+    "palpitations": "palpitations",
+    "painful walking": "painful_walking",
+    "pus filled pimples": "pus_filled_pimples",
+    "blackheads": "blackheads",
+    "scurring": "scurring",
+    "skin peeling": "skin_peeling",
+    "silver like dusting": "silver_like_dusting",
+    "small dents in nails": "small_dents_in_nails",
+    "inflammatory nails": "inflammatory_nails",
+    "blister": "blister",
+    "red sore around nose": "red_sore_around_nose",
+    "yellow crust ooze": "yellow_crust_ooze",
+    "prognosis": "prognosis"
+};
+
+                // Split transcript into words based on common separators
+                const words = transcript.split(/[\s,]+/); // Split by whitespace or comma
+
+                let mappedSymptoms = [];
+                let i = 0;
+
+                while (i < words.length) {
+                    let word = words[i];
+                    if (i < words.length - 1) {
+                        let twoWords = word + " " + words[i + 1];
+                        if (symptomMapping[twoWords]) {
+                            mappedSymptoms.push(symptomMapping[twoWords]);
+                            i += 2;
+                            continue;
+                        }
+                    }
+                    if (symptomMapping[word]) {
+                        mappedSymptoms.push(symptomMapping[word]);
+                    } else {
+                        mappedSymptoms.push(word);
+                    }
+                    i++;
+                }
+
+                // Join symptoms with comma for display and set to input value
+                const formattedSymptoms = mappedSymptoms.join(',');
+                transcriptionDiv.textContent = 'Recognized Symptoms: ' + formattedSymptoms;
+                transcriptionDiv.style.display = 'block';
+
+                // Set the formatted symptoms as the value of the input field
+                symptomsInput.value = formattedSymptoms;
+
+                // Restart timeout to turn off recognition after silence
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(function () {
+                    recognition.stop();
+                    console.log('Speech recognition stopped due to inactivity');
+                }, 3000); // Adjust the duration (in milliseconds) of silence before stopping
+            };
+
+            recognition.onerror = function (event) {
+                console.error('Speech recognition error occurred:', event.error);
+                clearTimeout(timeoutId);
+            };
+
+            recognition.onend = function () {
+                console.log('Speech recognition ended');
+                clearTimeout(timeoutId);
+            };
+
+            recognition.start();
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>

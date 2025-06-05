@@ -1,0 +1,140 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url("{{ url_for('static', filename='10559358.jpg') }}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    margin-top: -10px;
+    margin-left: 2px;
+    transition: transform 0.3s ease;
+}
+
+.myimg {
+    width: 70px;
+    height: 70px;
+    border: 2px solid black;
+    border-radius: 50px;
+    transition: transform 0.3s ease;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+.navbar-dark.bg-dark {
+    background-color: #1e5d9c !important; /* Replace #123456 with your desired color */
+}
+
+.myimg:hover {
+    transform: scale(1.2);
+}
+
+.container-fluid {
+    height: 80px; /* Adjust this value as needed */
+    display: flex;
+    align-items: center;
+}
+.navbar{
+    background-color: rgb(4, 4, 113);
+}
+.navbar-brand {
+    transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    font-size: 2.5rem;
+    margin-left: 20px;
+}
+
+.nav-link {
+    transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+    font-weight: bold;
+    letter-spacing: 1.2px;
+    font-size: 1rem; /* Reduced size for nav links */
+}
+
+.nav-link:hover {
+    background-color: rgba(59, 23, 159, 0.1);
+    color: #f7f7fb;
+    transform: scale(1.1);
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-container input {
+    padding-right: 40px;
+    font-weight: bold;
+}
+
+.search-container button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+}
+
+.nav-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ececf8;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.nav-item:hover::after {
+    transform: translateX(0);
+}
+
+.container{
+    width:800px;
+}
+
+.custom-container {
+    background: rgba(0,0,0,0.2); /* Semi-transparent black background */
+    color: white;
+    border-radius: 15px;
+    padding: 40px;
+    transition: background 0.3s ease; /* Smooth transition on background change */
+    position: relative; /* Ensure proper stacking context for child elements */
+    overflow: hidden; /* Clip any overflowing content */
+}
+
+.custom-container:hover {
+     /* Darken the background on hover */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3); /* Add shadow effect on hover */
+}
+
+.custom-container form {
+    position: relative; /* Ensure proper stacking context for child elements */
+}
+
+.custom-container button {
+    transition: transform 0.2s ease; /* Add transform animation on buttons */
+}
+
+.custom-container button:hover {
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+.bgimg {
+        background-image: url("{{ url_for('static', filename='10559358.jpg') }}");
+        background-size: cover; /* Adjust as needed */
+        background-position: center; /* Adjust as needed */
+        /* Other styles as required */
+    }
+
+
+
