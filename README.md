@@ -74,7 +74,6 @@
 3. Open in browser at [http://localhost:5000](http://localhost:5000)
 
 ---
----
 
 ## 🎬 Project Demo
 
@@ -85,8 +84,10 @@ Click the thumbnail below to watch a short demo of Diagnosmart in action:
 </a>
 
 ---
+---
+
 ## 📝 License
 
 This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
 
-
+---
