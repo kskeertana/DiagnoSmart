@@ -39,7 +39,7 @@
 ## 🏃 How to Run
 
 ---
-
+  
 ### ▶️ Streamlit App
 
 1. Install dependencies:
@@ -80,9 +80,13 @@
 
 Click the thumbnail below to watch a short demo of Diagnosmart in action:
 
-[![Watch the Demo](demo.png)](https://www.youtube.com/watch?v=y06p7-kj-yI)
+<a href="https://www.youtube.com/watch?v=y06p7-kj-yI" target="_blank">
+  <img src="demo.png" alt="Watch the Demo" width="500" height="300 />
+</a>
+
 ---
 ## 📝 License
 
 This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
 
